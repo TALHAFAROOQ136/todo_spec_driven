@@ -1,55 +1,98 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: 0.0.0 → 1.0.0
+- Modified principles: N/A (initial creation)
+- Added sections: All (6 principles, Technology Constraints, Development Workflow, Governance)
+- Removed sections: All template placeholders replaced
+- Templates requiring updates: ⚠ pending (first constitution, templates not yet customized)
+- Follow-up TODOs: None
+-->
+
+# Todo Console App Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Spec-Driven Development (NON-NEGOTIABLE)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+All features MUST be specified before implementation. No code is written manually. The workflow is strictly: Specify → Plan → Tasks → Implement via Claude Code. Every implementation change MUST trace back to a specification artifact. If a spec is missing or ambiguous, the agent MUST stop and request clarification rather than improvise.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. In-Memory Data Store
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+All task data MUST be stored in Python in-memory data structures (lists/dictionaries). No external databases, files, or persistence layers are allowed in Phase 1. Data resets on application restart. This keeps the scope minimal and focused on core CRUD logic.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Clean Python Architecture
 
-### [PRINCIPLE_6_NAME]
+- Project MUST use Python 3.13+ with UV as the package/project manager.
+- Source code MUST reside in `/src` directory with proper Python package structure.
+- Code MUST follow PEP 8 style guidelines.
+- Functions MUST be small, single-responsibility, and clearly named.
+- No third-party runtime dependencies for core functionality; standard library only.
+- Type hints SHOULD be used for function signatures.
 
+### IV. Five Core Features (MVP Scope)
 
-[PRINCIPLE__DESCRIPTION]
+The application MUST implement exactly these five Basic Level features and nothing more:
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+1. **Add Task** — Create new todo items with title and description.
+2. **View Task List** — Display all tasks with status indicators (complete/incomplete).
+3. **Update Task** — Modify existing task title or description by ID.
+4. **Delete Task** — Remove a task from the list by ID.
+5. **Mark as Complete** — Toggle task completion status by ID.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+No intermediate or advanced features (priorities, tags, search, filters, recurring tasks, due dates) are in scope for Phase 1.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### V. User-Friendly Console Interface
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- The application MUST provide a clear, interactive command-line menu.
+- Input/output MUST be human-readable with proper formatting.
+- Invalid inputs MUST be handled gracefully with helpful error messages.
+- The user MUST be able to navigate back to the main menu from any operation.
+- Each task MUST have a unique auto-generated numeric ID visible to the user.
+
+### VI. Simplicity & YAGNI
+
+- Start simple. Do not over-engineer.
+- No abstractions, design patterns, or frameworks beyond what the five features require.
+- No configuration files, environment variables, or external dependencies for Phase 1.
+- If in doubt, choose the simpler approach.
+
+## Technology Constraints
+
+| Layer | Technology |
+|-------|-----------|
+| Language | Python 3.13+ |
+| Package Manager | UV |
+| Data Storage | In-memory (Python dict/list) |
+| AI Development | Claude Code + Spec-Kit Plus |
+| Interface | Console (stdin/stdout) |
+
+- No databases, ORMs, or file-based persistence.
+- No web frameworks or HTTP servers.
+- No third-party libraries for core logic.
+
+## Development Workflow
+
+1. **Specify** — Write feature specification in `specs/` using Spec-Kit Plus templates.
+2. **Plan** — Generate architectural plan via `/sp.plan`.
+3. **Tasks** — Break plan into atomic, testable tasks via `/sp.tasks`.
+4. **Implement** — Execute tasks via Claude Code. No manual coding.
+5. **Validate** — Run the application, verify all five features work correctly.
+6. **Record** — Create PHR for every significant interaction.
+
+All code changes MUST be committed to Git with meaningful commit messages. The repository MUST contain:
+- Constitution file (this document)
+- `specs/` folder with all specification files
+- `history/` folder with prompt history records
+- `/src` folder with Python source code
+- `README.md` with setup instructions
+- `CLAUDE.md` with Claude Code instructions
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- This constitution is the highest authority for Phase 1 development decisions.
+- All specifications, plans, and tasks MUST comply with these principles.
+- Amendments require explicit user approval and version increment.
+- When conflicts arise, the hierarchy is: Constitution > Specify > Plan > Tasks.
+- Any architecturally significant decision MUST be surfaced for ADR consideration before implementation.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-02-15 | **Last Amended**: 2026-02-15
