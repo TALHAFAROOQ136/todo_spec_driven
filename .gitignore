@@ -18,3 +18,14 @@ Thumbs.db
 .env*
 .uv/
 uv.lock
+
+# Node.js / Frontend
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment (keep .env.example)
+!.env.example
+!.env.local.example
