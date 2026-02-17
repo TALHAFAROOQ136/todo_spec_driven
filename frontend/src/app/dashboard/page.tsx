@@ -49,10 +49,14 @@ export default function DashboardPage() {
   }, [userId]);
 
   useEffect(() => {
+    if (!isPending && !session) {
+      router.push("/signin");
+      return;
+    }
     if (userId) {
       fetchTasks();
     }
-  }, [userId, fetchTasks]);
+  }, [isPending, session, userId, fetchTasks, router]);
 
   async function handleSignOut() {
     await signOut();
