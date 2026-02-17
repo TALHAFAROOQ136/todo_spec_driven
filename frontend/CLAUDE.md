@@ -1,7 +1,7 @@
-# Frontend — Next.js 16 Todo App
+# Frontend — Next.js 15 Todo App
 
 ## Tech Stack
-- Next.js 16 (App Router), TypeScript, Tailwind CSS, Better Auth
+- Next.js 15 (App Router), TypeScript, Tailwind CSS, Better Auth
 
 ## Run
 ```bash
@@ -16,10 +16,10 @@ npm run dev
 - `src/lib/auth.ts` — Better Auth server config
 - `src/lib/auth-client.ts` — Better Auth client for components
 - `src/lib/api.ts` — Centralized API client with Bearer token
-- `proxy.ts` — Route protection (Next.js 16 middleware)
+- `middleware.ts` — Route protection middleware
 
 ## Rules
 - Better Auth manages all user data (no manual user table)
-- JWT issued by Better Auth, sent as Bearer token to backend
+- JWT issued by Better Auth (EdDSA via JWT plugin), sent as Bearer token to backend
 - `BETTER_AUTH_SECRET` must match backend secret
-- Use `proxy.ts` (not middleware.ts) for Next.js 16
+- Use `middleware.ts` for route protection

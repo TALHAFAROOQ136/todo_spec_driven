@@ -20,6 +20,6 @@ uv run uvicorn todo_api.main:app --reload --port 8000
 
 ## Rules
 - All task queries MUST filter by `user_id` (data isolation)
-- JWT verified via PyJWT with HS256 using `BETTER_AUTH_SECRET`
+- JWT verified via PyJWT with EdDSA using JWKS from Better Auth (`/api/auth/jwks`)
 - Use `AsyncSession` for all DB operations
 - Env vars loaded from `.env` via python-dotenv
