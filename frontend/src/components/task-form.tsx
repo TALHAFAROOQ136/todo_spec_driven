@@ -5,7 +5,8 @@ import { apiFetch } from "@/lib/api";
 
 interface TaskFormProps {
   userId: string;
-  onSuccess: () => void;
+  onSuccess?: () => void;
+  onUpdate?: (title: string, description: string) => void;
   onCancel: () => void;
   initialTitle?: string;
   initialDescription?: string;
@@ -16,6 +17,7 @@ interface TaskFormProps {
 export default function TaskForm({
   userId,
   onSuccess,
+  onUpdate,
   onCancel,
   initialTitle = "",
   initialDescription = "",
@@ -26,7 +28,6 @@ export default function TaskForm({
   const [description, setDescription] = useState(initialDescription);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,30 +36,22 @@ export default function TaskForm({
       return;
     }
     setError(null);
+
+    if (mode === "edit" && onUpdate) {
+      onUpdate(title.trim(), description);
+      return;
+    }
+
     setLoading(true);
     try {
-      if (mode === "edit" && taskId) {
-        await apiFetch(`/api/${userId}/tasks/${taskId}`, {
-          method: "PUT",
-          body: JSON.stringify({
-            title: title.trim(),
-            description: description,
-          }),
-        });
-        setSuccess("Task updated successfully");
-      } else {
-        await apiFetch(`/api/${userId}/tasks`, {
-          method: "POST",
-          body: JSON.stringify({
-            title: title.trim(),
-            description: description,
-          }),
-        });
-        setSuccess("Task created successfully");
-      }
-      setTimeout(() => {
-        onSuccess();
-      }, 500);
+      await apiFetch(`/api/${userId}/tasks`, {
+        method: "POST",
+        body: JSON.stringify({
+          title: title.trim(),
+          description: description,
+        }),
+      });
+      onSuccess?.();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to save task.",
@@ -76,11 +69,6 @@ export default function TaskForm({
       {error && (
         <div className="mb-3 rounded-md bg-red-50 p-2 text-sm text-red-700">
           {error}
-        </div>
-      )}
-      {success && (
-        <div className="mb-3 rounded-md bg-green-50 p-2 text-sm text-green-700">
-          {success}
         </div>
       )}
 

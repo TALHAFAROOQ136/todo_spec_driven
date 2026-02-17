@@ -14,13 +14,17 @@ interface Task {
 interface TaskListProps {
   tasks: Task[];
   userId: string;
-  onTaskUpdated: () => void;
+  onToggle: (taskId: string) => void;
+  onDelete: (taskId: string) => void;
+  onUpdate: (taskId: string, title: string, description: string) => void;
 }
 
 export default function TaskList({
   tasks,
   userId,
-  onTaskUpdated,
+  onToggle,
+  onDelete,
+  onUpdate,
 }: TaskListProps) {
   if (tasks.length === 0) {
     return <EmptyState />;
@@ -33,7 +37,9 @@ export default function TaskList({
           key={task.id}
           task={task}
           userId={userId}
-          onTaskUpdated={onTaskUpdated}
+          onToggle={onToggle}
+          onDelete={onDelete}
+          onUpdate={onUpdate}
         />
       ))}
     </div>

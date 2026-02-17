@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { apiFetch } from "@/lib/api";
 import TaskForm from "./task-form";
 
 interface Task {
@@ -17,50 +16,19 @@ interface Task {
 interface TaskItemProps {
   task: Task;
   userId: string;
-  onTaskUpdated: () => void;
+  onToggle: (taskId: string) => void;
+  onDelete: (taskId: string) => void;
+  onUpdate: (taskId: string, title: string, description: string) => void;
 }
 
 export default function TaskItem({
   task,
   userId,
-  onTaskUpdated,
+  onToggle,
+  onDelete,
+  onUpdate,
 }: TaskItemProps) {
   const [editing, setEditing] = useState(false);
-  const [toggling, setToggling] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-
-  async function handleToggle() {
-    setToggling(true);
-    try {
-      await apiFetch(`/api/${userId}/tasks/${task.id}/complete`, {
-        method: "PATCH",
-      });
-      onTaskUpdated();
-    } catch {
-      // Error silently — could add error state
-    } finally {
-      setToggling(false);
-    }
-  }
-
-  async function handleDelete() {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this task?",
-    );
-    if (!confirmed) return;
-
-    setDeleting(true);
-    try {
-      await apiFetch(`/api/${userId}/tasks/${task.id}`, {
-        method: "DELETE",
-      });
-      onTaskUpdated();
-    } catch {
-      // Error silently
-    } finally {
-      setDeleting(false);
-    }
-  }
 
   if (editing) {
     return (
@@ -70,9 +38,9 @@ export default function TaskItem({
         mode="edit"
         initialTitle={task.title}
         initialDescription={task.description}
-        onSuccess={() => {
+        onUpdate={(title, description) => {
           setEditing(false);
-          onTaskUpdated();
+          onUpdate(task.id, title, description);
         }}
         onCancel={() => setEditing(false)}
       />
@@ -86,8 +54,7 @@ export default function TaskItem({
       }`}
     >
       <button
-        onClick={handleToggle}
-        disabled={toggling}
+        onClick={() => onToggle(task.id)}
         className={`mt-0.5 h-5 w-5 flex-shrink-0 rounded border-2 ${
           task.completed
             ? "border-green-500 bg-green-500 text-white"
@@ -141,11 +108,10 @@ export default function TaskItem({
           Edit
         </button>
         <button
-          onClick={handleDelete}
-          disabled={deleting}
-          className="rounded px-2 py-1 text-sm text-red-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
+          onClick={() => onDelete(task.id)}
+          className="rounded px-2 py-1 text-sm text-red-500 hover:bg-red-50 hover:text-red-700"
         >
-          {deleting ? "..." : "Delete"}
+          Delete
         </button>
       </div>
     </div>

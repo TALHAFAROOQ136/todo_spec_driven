@@ -69,8 +69,61 @@ export default function DashboardPage() {
     await fetchTasks();
   }
 
-  async function handleTaskUpdated() {
-    await fetchTasks();
+  async function handleToggleComplete(taskId: string) {
+    const prev = tasks;
+    setTasks((t) =>
+      t.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task,
+      ),
+    );
+    try {
+      await apiFetch(`/api/${userId}/tasks/${taskId}/complete`, {
+        method: "PATCH",
+      });
+    } catch {
+      setTasks(prev);
+      setError("Failed to update task.");
+    }
+  }
+
+  async function handleDeleteTask(taskId: string) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this task?",
+    );
+    if (!confirmed) return;
+
+    const prev = tasks;
+    setTasks((t) => t.filter((task) => task.id !== taskId));
+    try {
+      await apiFetch(`/api/${userId}/tasks/${taskId}`, {
+        method: "DELETE",
+      });
+    } catch {
+      setTasks(prev);
+      setError("Failed to delete task.");
+    }
+  }
+
+  async function handleUpdateTask(
+    taskId: string,
+    title: string,
+    description: string,
+  ) {
+    const prev = tasks;
+    setTasks((t) =>
+      t.map((task) =>
+        task.id === taskId ? { ...task, title, description } : task,
+      ),
+    );
+    try {
+      await apiFetch(`/api/${userId}/tasks/${taskId}`, {
+        method: "PUT",
+        body: JSON.stringify({ title, description }),
+      });
+    } catch {
+      setTasks(prev);
+      setError("Failed to update task.");
+    }
   }
 
   if (isPending) {
@@ -122,7 +175,9 @@ export default function DashboardPage() {
         <TaskList
           tasks={tasks}
           userId={userId!}
-          onTaskUpdated={handleTaskUpdated}
+          onToggle={handleToggleComplete}
+          onDelete={handleDeleteTask}
+          onUpdate={handleUpdateTask}
         />
       )}
     </div>
