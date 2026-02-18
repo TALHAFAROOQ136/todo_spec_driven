@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from todo_api.config import CORS_ORIGINS
 from todo_api.db import create_tables
-from todo_api.routes import tasks
+from todo_api.routes import tasks, chat
 
 
 @asynccontextmanager
@@ -26,3 +26,4 @@ app.add_middleware(
 )
 
 app.include_router(tasks.router)
+app.include_router(chat.router)

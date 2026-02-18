@@ -138,12 +138,20 @@ export default function DashboardPage() {
     <div className="mx-auto min-h-screen max-w-2xl px-4 py-8">
       <header className="mb-8 flex items-center justify-between">
         <h1 className="text-2xl font-bold">My Tasks</h1>
-        <button
-          onClick={handleSignOut}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
-        >
-          Sign Out
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => router.push("/chat")}
+            className="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700"
+          >
+            Chat
+          </button>
+          <button
+            onClick={handleSignOut}
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
+          >
+            Sign Out
+          </button>
+        </div>
       </header>
 
       {error && (
