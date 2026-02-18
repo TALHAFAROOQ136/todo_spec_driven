@@ -9,3 +9,4 @@ CORS_ORIGINS: list[str] = [
     origin.strip()
     for origin in os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(",")
 ]
+OPENAI_API_KEY: str = os.environ.get("OPENAI_API_KEY", "")
